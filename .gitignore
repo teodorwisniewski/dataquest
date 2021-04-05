@@ -1,0 +1,8 @@
+
+*.zip
+.vscode/
+Data-Science-Projects-with-Python/
+myenv/
+*.pdf
+*.tar
+*.odt
