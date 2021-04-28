@@ -20,10 +20,10 @@ def check_connection(conn):
 
 
 
-hostname = os.environ.get('HOST_POSTGRES')
-username = os.environ.get('DB_USER')
-password = os.environ.get('DB_PASS') #
-database = os.environ.get('DATABASE_NAME_POSTGRES')
+hostname = 'localhost' #os.environ.get('HOST_POSTGRES')
+username = 'postgres' #os.environ.get('DB_USER')
+password = os.environ.get('DB_PASS_LOCAL') #os.environ.get('DB_PASS') #
+database = 'postgres'
 schema_name = 'public'
 table_name = 'users'
 
@@ -43,8 +43,8 @@ try:
     #     'name': 'Jose Kirby',
     #     'address': '5 random street'
     # }
-    #
-    #
+
+
     # cur = conn.cursor()
     # placeholders = ', '.join(['%('+val+')s' for val in row_values])
     # cur.execute(f"""
@@ -87,14 +87,41 @@ try:
     output = get_email(name)
     print(output)
 
+
+    """
+    4/9  
+    We managed to avoid inserting unwanted sql injections from clever users
+    with the construction cur.excecute('sql query %s %s', argument_values)
+    Result from the code below
+   [('larry.cain@martinez.net',)]
+    []
+    """
+    print("\n\n\n\n\ Part 4/9 ")
+    def get_email_fixed(name):
+       cur = conn.cursor()
+       cur.execute("SELECT email FROM users WHERE name = %s", (name,))
+       res = cur.fetchall()
+       return res
+
+
+    name = "Larry Cain"
+    output = get_email_fixed(name)
+    print(output)
+    name = "Larry Cain' UNION SELECT address FROM users WHERE name = 'Larry Cain"
+    output = get_email_fixed(name)
+    print(output)
     print("\n\n\n\n")
+
     # printing results of the database
     print(check_connection(conn))
     #
     df = read_sql_table_to_df(conn, schema_name, table_name)
     print(df.head())
+
+
+
 except Exception as err:
-    print("Oops! An exception has occured:", err)
+    print("Oops! An exception has occured:",  str(err))
     print("Exception TYPE:", type(err))
 finally:
     conn.close()
