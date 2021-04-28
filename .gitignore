@@ -8,3 +8,5 @@ myenv/
 *.odt
 *.db
 .ipynb_checkpoints
+*.xlsx
+*.csv
