@@ -10,3 +10,4 @@ myenv/
 .ipynb_checkpoints
 *.xlsx
 *.csv
+.idea
