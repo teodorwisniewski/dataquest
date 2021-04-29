@@ -1,4 +1,4 @@
-# Data Engineer Studies
+# Data Engineer Path
 > This repository contains short python and sql scripts with my comments that allow me to solidify knowledge  
 > that I am learning from Dataquest. Here are my studies based on the Data Engineer path from Dataquest courses.
 
