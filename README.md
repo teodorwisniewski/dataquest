@@ -14,6 +14,6 @@ One can learn with it many interesting aspects of postgres to use it in the opti
 
 ## Recommended requirements setup
 The requirements.txt file for all anaconda packages:
-> pip install -r requirements.txt
+> conda install --file requirements.txt
 ## Author
 Teodor Wisniewski
