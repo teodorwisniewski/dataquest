@@ -148,6 +148,8 @@ try:
     6/9  
     The prepare SQL statement are local in regard to the current connection and only visible from the current connection\
     and from the cursors that belong to this connection. The PREPARE SQL statements disapear after the closing of the connection.
+    The list of prepare statements can be found in pg_prepared_statements table.
+    The pg_prepared_statements table is one of Postgres internal tables
     """
     print("\n\n\n\n Part 6/9 SQL PREPARE statement are local for the current connection")
     cur2 = conn.cursor()
@@ -162,7 +164,19 @@ try:
     cur3.execute("EXECUTE get_email_name2(%s)", (name,))
     output2 = cur3.fetchall()
     print(f"The cur2={output1} and the cur3={output2}")
+    cur = conn.cursor()
+    cur.execute("""PREPARE get_email(text) AS 
+    			SELECT email FROM users WHERE name = $1;""")
 
+    cur.execute("EXECUTE get_email(%s)", ('Anna Carter',))
+    anna_email = cur.fetchone()
+    print(anna_email)
+    cur.execute("SELECT * FROM pg_prepared_statements")
+    list_prepare_statements = cur.fetchall()
+    df = pd.DataFrame(list_prepare_statements, columns=['Name', 'SQL string query', 'date', 'datatypes',"boolean"])
+
+    print(df)
+    print(list_prepare_statements)
 
 
     print("\n\n\n\n")
