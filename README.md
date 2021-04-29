@@ -10,8 +10,10 @@ One can learn with it many interesting aspects of postgres to use it in the opti
    * <i>Prepared Statements and SQL Injections.py</i> in this script one can learn more about sql injections, PREPARE
    SQL statements, querying a postgres database safely without letting leaking of data. In order to run it, psycopg2,
      pandas , numpy libraries need to be installed.
-   
-    
+     
 
+## Recommended requirements setup
+The requirements.txt file for all anaconda packages:
+> pip install -r requirements.txt
 ## Author
 Teodor Wisniewski
