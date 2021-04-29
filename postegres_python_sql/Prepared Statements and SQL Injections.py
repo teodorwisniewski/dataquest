@@ -179,6 +179,57 @@ try:
     print(list_prepare_statements)
 
 
+
+
+    """
+    7/9  
+
+    """
+    print("\n\n\n\n Part 7/9 SQL PREPARE statement to accelarate statements")
+    import timeit
+    import csv
+
+
+    # function that inserts all users using a prepared statement
+    def prepared_insert(users):
+        conn2 = psycopg2.connect(host=hostname, user=username, password=password, dbname=database)
+        cur5 = conn.cursor()
+        cur5.execute("""
+            PREPARE insert_user5(integer, text, text, text) AS
+            INSERT INTO users VALUES ($1, $2, $3, $4)
+        """)
+        for user in users:
+            cur5.execute("EXECUTE insert_user5(%s, %s, %s, %s)", user)
+        conn2.close()
+
+
+    def regular_insert(users):
+        conn3 = psycopg2.connect(host=hostname, user=username, password=password, dbname=database)
+        cur6 = conn.cursor()
+        for user in users:
+            cur6.execute("""
+                INSERT INTO users VALUES (%s, %s, %s, %s)
+            """, user)
+        conn3.close()
+
+
+    users = []
+    with open('user_accounts.csv', 'r') as file:
+        next(file)  # skip csv header
+        reader = csv.reader(file)
+        for row in reader:
+            users.append(row)
+
+    def f_prepared_test():
+        prepared_insert(users)
+    time_prepared = timeit.timeit(f_prepared_test, number=1)
+
+    def f_regular_test():
+        regular_insert(users)
+    time_regular = timeit.timeit(f_regular_test, number=1)
+
+    print(f"The prepared statement is {time_regular/time_prepared} times faster tham the regular statement.")
+
     print("\n\n\n\n")
     # printing results of the database
     print(check_connection(conn))
