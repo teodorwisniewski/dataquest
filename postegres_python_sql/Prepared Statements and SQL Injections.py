@@ -112,14 +112,65 @@ try:
     print(output)
     print("\n\n\n\n")
 
+
+
+
+    """
+    5/9  
+    There is another more SQLish way to prevent users to inject unwanted stuff into
+    the database. Namely, using PREPARE SQL statements, which allow to prepare one type of stytemtement that
+    may be used many times. This is a safe way of using sql queries.
+    """
+    print("\n\n\n\n Part 5/9 SQL PREPARE statement")
+    cur = conn.cursor()
+    cur.execute("""
+     PREPARE get_email_name(text) AS
+     SELECT email FROM users WHERE name = $1 
+    """)
+
+    def get_email_sql_statement(name, cur):
+        cur.execute("EXECUTE get_email_name(%s)", (name,))
+        res = cur.fetchall()
+        return res
+
+
+
+    name = "Larry Cain"
+    output = get_email_sql_statement(name, cur)
+    print(output)
+    name = "Larry Cain' UNION SELECT address FROM users WHERE name = 'Larry Cain"
+    output = get_email_sql_statement(name, cur)
+    print(output)
+    print("\n\n\n\n")
+
+
+    """
+    6/9  
+    The prepare SQL statement are local in regard to the current connection and only visible from the current connection\
+    and from the cursors that belong to this connection. The PREPARE SQL statements disapear after the closing of the connection.
+    """
+    print("\n\n\n\n Part 6/9 SQL PREPARE statement are local for the current connection")
+    cur2 = conn.cursor()
+    cur3 = conn.cursor()
+    cur2.execute("""
+     PREPARE get_email_name2(text) AS
+     SELECT email FROM users WHERE name = $1 
+    """)
+    name = "Larry Cain"
+    cur2.execute("EXECUTE get_email_name2(%s)", (name,))
+    output1 = cur2.fetchall()
+    cur3.execute("EXECUTE get_email_name2(%s)", (name,))
+    output2 = cur3.fetchall()
+    print(f"The cur2={output1} and the cur3={output2}")
+
+
+
+    print("\n\n\n\n")
     # printing results of the database
     print(check_connection(conn))
     #
     df = read_sql_table_to_df(conn, schema_name, table_name)
     print(df.head())
-
-
-
 except Exception as err:
     print("Oops! An exception has occured:",  str(err))
     print("Exception TYPE:", type(err))
